@@ -1,2 +1,2 @@
 #!/bin/bash
-tr 'A' 'z' | tr 'c' 'e'
+sed -i 's/[Aa]/Z/g;s/[Cc]/e/g'
