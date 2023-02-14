@@ -1,0 +1,2 @@
+#!/bin/bash
+echo "$(env)" > environment_variables.sh
