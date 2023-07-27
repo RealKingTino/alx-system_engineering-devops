@@ -15,4 +15,4 @@ do
     	done
 
     	(( hour++ ))
-done | head -n 70
+done
