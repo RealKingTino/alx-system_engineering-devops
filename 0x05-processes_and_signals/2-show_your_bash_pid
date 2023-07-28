@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+# Ignore shellcheck warning for "ps aux | grep"
+# shellcheck disable=SC2009
+# Use ps command to list all processes, filter lines containing the word "bash",
+# and exclude the grep command itself from the output
+
+ps -aux | grep bash
