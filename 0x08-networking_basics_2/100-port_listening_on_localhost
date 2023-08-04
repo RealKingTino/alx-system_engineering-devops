@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+#A Bash script that listens on localhost.
+
+sudo nc -lp 98
