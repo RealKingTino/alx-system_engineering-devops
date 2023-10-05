@@ -1,29 +1,25 @@
 #!/usr/bin/env bash
 # This script displays information about subdomains of a given domain.
 
-display_info() {
-    local domain="$1"
-    local subdomain="$2"
-    
-    dig_output=$(dig "${subdomain}.${domain}" | grep -A1 'ANSWER SECTION:')
-    record_type=$(echo "$dig_output" | awk '/IN\s+[A-Z]+/ {print $4}')
-    destination=$(echo "$dig_output" | awk '/[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+/ {print $5}')
-    
-    echo "The subdomain ${subdomain} is a ${record_type} record and points to ${destination}"
-}
+print_info () {
+    local subdomain="$1"
+    local domain="$2"
+    local result
 
-if [ $# -eq 2 ]; then
-    domain="$1"
-    subdomain="$2"
-    display_info "$domain" "$subdomain"
-elif [ $# -eq 1 ]; then
-    domain="$1"
-    # Display information for default subdomains
-    display_info "$domain" "www"
-    display_info "$domain" "lb-01"
-    display_info "$domain" "web-01"
-    display_info "$domain" "web-02"
+
+    result=$(dig +short "${subdomain}.${domain}")
+    
+    if [ -z "$result" ]; then
+        echo "The subdomain ${subdomain} does not have a valid DNS record."
+    else
+        echo "The subdomain ${subdomain} is a A record and points to ${result}"
+    fi
+}
+if [ "$#" -eq 2 ]; then
+    print_info "$2" "$1"
 else
-    echo "Usage: $0 <domain> [subdomain]"
-    exit 1
+    domains=("www" "lb-01" "web-01" "web-02")
+    for subdomain in "${domains[@]}"; do
+        print_info "$subdomain" "$1"
+    done
 fi
