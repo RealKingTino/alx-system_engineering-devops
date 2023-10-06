@@ -1,25 +1,24 @@
 #!/usr/bin/env bash
 # This script displays information about subdomains of a given domain.
 
-print_info () {
-    local subdomain="$1"
-    local domain="$2"
-    local result
-
-
-    result=$(dig +short "${subdomain}.${domain}")
-    
-    if [ -z "$result" ]; then
-        echo "The subdomain ${subdomain} does not have a valid DNS record."
-    else
-        echo "The subdomain ${subdomain} is a A record and points to ${result}"
-    fi
+function print_info {
+    local domain="$1"
+    local subdomain="$2"
+    dig "$subdomain"."$domain" | grep -A1 'ANSWER SECTION:' | \
+        awk 'FNR == 2 {printf "The subdomain %s is a %s record and points to %s\n", var, $4, $5}' var="$subdomain"
 }
-if [ "$#" -eq 2 ]; then
-    print_info "$2" "$1"
-else
-    domains=("www" "lb-01" "web-01" "web-02")
-    for subdomain in "${domains[@]}"; do
-        print_info "$subdomain" "$1"
+
+if [ $# -eq 1 ]; then
+    domain="$1"
+    sub_domains=("www" "lb-01" "web-01" "web-02")
+    for subdomain in "${sub_domains[@]}"; do
+        print_info "$domain" "$subdomain"
     done
+elif [ $# -eq 2 ]; then
+    domain="$1"
+    subdomain="$2"
+    print_info "$domain" "$subdomain"
+else
+    echo "Usage: $0 <domain> [subdomain]"
+    exit 1
 fi
