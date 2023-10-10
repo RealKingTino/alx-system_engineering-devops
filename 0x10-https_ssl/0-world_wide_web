@@ -4,7 +4,7 @@
 function print_info {
     local domain="$1"
     local subdomain="$2"
-    dig -t A "$subdomain"."$domain" | grep -A1 'ANSWER SECTION:' | \
+    dig "$subdomain"."$domain" | grep -A1 'ANSWER SECTION:' | \
         awk 'FNR == 2 {printf "The subdomain %s is a %s record and points to %s\n", var, $4, $5}' var="$subdomain"
     }
 
