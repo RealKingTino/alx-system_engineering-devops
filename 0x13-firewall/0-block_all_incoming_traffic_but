@@ -1,7 +1,3 @@
-#!/usr/bin/env bash
-# Configure ufw firewall to block incoming traffic
-# except TCP ports
-
 sudo apt-get install ufw
 sudo ufw default deny incoming
 sudo ufw default allow outgoing
