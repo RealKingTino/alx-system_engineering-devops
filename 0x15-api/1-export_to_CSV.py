@@ -1,8 +1,8 @@
 #!/usr/bin/python3
 """Exports data to CSV format for a given employee ID."""
-import sys
-import requests
 import csv
+import requests
+import sys
 
 if __name__ == "__main__":
     if len(sys.argv) != 2 or not sys.argv[1].isdigit():
