@@ -3,6 +3,7 @@
 import sys
 import requests
 
+
 if __name__ == "__main__":
     if len(sys.argv) != 2 or not sys.argv[1].isdigit():
         print("Usage: {} employee_id".format(sys.argv[0]))
