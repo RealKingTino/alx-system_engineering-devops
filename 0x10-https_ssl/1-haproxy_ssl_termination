@@ -1,5 +1,5 @@
 global
-    log /dev/log local0
+    log /dev/log local0 notice
     log /dev/log local1 notice
     chroot /var/lib/haproxy
     stats socket /run/haproxy/admin.sock mode 660 level admin expose-fd listeners
@@ -35,15 +35,17 @@ defaults
 
 frontend tinotechtalks.tech-http-frontend
     bind *:80
-    http-request set-header X-Forwarded-Proto http
-    default_backend tinotechtalks.tech-backend
-
-frontend tinotechtalks.tech-https-frontend
-    bind *:443 ssl crt /etc/letsencrypt/live/tinotechtalks.tech/fullchain.pem
-    http-request set-header X-Forwarded-Proto https
-    default_backend tinotechtalks.tech-backend
+    mode http
+    bind *:443 ssl crt /etc/haproxy/certs/www.tinotechtalks.tech.pem
+    redirect scheme https if !{ ssl_fc }
 
 backend tinotechtalks.tech-backend
     balance roundrobin
-    server 914-web-01 52.3.241.118:80 check
-    server 914-web-02 54.173.33.44:80 check
+    server 304315-web-01 52.3.241.118:80 check
+    server 304315-web-02 54.173.33.44:80 check
+
+listen http-in
+    bind :80
+    balance roundrobin
+    server 304315-web-01 52.3.241.118:80 check
+    server 304315-web-02 54.173.33.44:80 check
